@@ -5,9 +5,10 @@
 def insertionSort(arr):
     i = 1
     while(i < len(arr)):
-        j = i 
+        j = i
         while ((j > 0) and (arr[j - 1] > arr[j])):
-            arr[j], arr[j - 1] = arr [j - 1], arr[j] #swapping shortcurt in python
+            # swapping shortcurt in python
+            arr[j], arr[j - 1] = arr[j - 1], arr[j]
             j -= 1
         i += 1
 
@@ -15,11 +16,13 @@ def insertionSort(arr):
 ##########################QUICK SORT#############################
 #################################################################
 
+
 def quickSort(arr, lo, hi):
     if lo < hi:
         p = partition(arr, lo, hi)
         quickSort(arr, lo, p - 1)
         quickSort(arr, p + 1, hi)
+
 
 def partition(arr, lo, hi):
     pivot = arr[hi]
@@ -37,17 +40,19 @@ def partition(arr, lo, hi):
 ##########################BUBBLE SORT############################
 #################################################################
 
+
 def bubbleSort(arr):
     n = len(arr)
- 
+
     for i in range(n-1):
         for j in range(0, n-i-1):
-            if arr[j] > arr[j + 1] :
+            if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
 #################################################################
 ##########################SELECTION SORT#########################
 #################################################################
+
 
 def selectionSort(arr, size):
     for step in range(size):
