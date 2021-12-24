@@ -5,8 +5,6 @@ from collections import deque
 import random
 import time
 
-from PySimpleGUI.PySimpleGUI import T
-
 root = Tk()
 root.title("Path Finding Visualizer")
 root.maxsize(900, 900)
@@ -19,7 +17,7 @@ ROWS = 25
 grid = []
 
 # Creating Canvas (on left side for acutal window)
-canvas = Canvas(root, width=WIDTH, height=WIDTH, bg="white")
+canvas = Canvas(root, width=WIDTH, height=WIDTH, bg="gray4")
 canvas.pack(fill=Y, side=LEFT, padx=10, pady=5)
 
 # Creating Frame for UI later on -  on right Side
@@ -56,5 +54,50 @@ class Node:
         self.barrier = False
         self.clicked = False
         self.total_rows = total_rows
+
+    def make_start(self):
+        self.button.config(bg="DarkOrange2")
+        self.start = True
+        self.clicked = True
+        Node.start_point = (self.col, self.row)
+
+    def make_end(self):
+        self.button.config(bg="lime green")
+        self.end = True
+        self.clicked = True
+        Node.end_point = (self.col, self.row)
+
+    def make_barrier(self):
+        self.button.config(bg="black")
+        self.barrier = True
+        self.clicked = True
+        
+    def reset(self):
+        self.button.config(bg="white")
+        self.clicked = False
+    
+    def make_path(self):
+        self.button.config(bg="gold")
+    
+    def make_to_visit(self):
+        self.button.config(bg="purple")
+
+    def make_open(self):
+        self.buttonn.config(bg='cornflower blue')
+
+    def make_closed(self):
+        self.button.config(bg='LightSkyBlue2')
+
+def make_grid(width, rows):
+    gap = width // rows
+    offset = 2
+    for i in range(rows):
+        grid.append([])
+        for j in range(rows):
+            node = Node(i, j, gap, offset, rows)
+            grid[i].append(node)
+    return grid
+
+grid = make_grid(WIDTH, ROWS)
 
 root.mainloop()
