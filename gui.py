@@ -1,3 +1,4 @@
+from tkinter import messagebox
 import PySimpleGUI as sg
 
 from SortingVis import *
@@ -115,7 +116,10 @@ def mainWindow():
             window.un_hide()
 
         elif eventMain == '-PATHWIN-':
-            pass
+            window.hide()
+            messagebox.showinfo(title="Pathfinding",
+                                message="Please contact Developer (WIP)")
+            window.un_hide()
 
     window.close()
 
