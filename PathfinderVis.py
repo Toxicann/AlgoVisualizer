@@ -16,11 +16,11 @@ WIDTH = 500
 ROWS = 25
 grid = []
 
-# Creating Canvas (on left side for acutal window)
+# Creating empty Canvas window (on left side for pathfinding window)
 canvas = Canvas(root, width=WIDTH, height=WIDTH, bg="gray4")
 canvas.pack(fill=Y, side=LEFT, padx=10, pady=5)
 
-# Creating Frame for UI later on -  on right Side
+# Creating Empty Frame for UI later on -  on right Side
 UI_frame = Frame(root, width=600, height=200, bg="#19232d")
 UI_frame.pack(side=RIGHT, padx=10, pady=5)
 
@@ -71,14 +71,14 @@ class Node:
         self.button.config(bg="black")
         self.barrier = True
         self.clicked = True
-        
+
     def reset(self):
         self.button.config(bg="white")
         self.clicked = False
-    
+
     def make_path(self):
         self.button.config(bg="gold")
-    
+
     def make_to_visit(self):
         self.button.config(bg="purple")
 
@@ -88,6 +88,53 @@ class Node:
     def make_closed(self):
         self.button.config(bg='LightSkyBlue2')
 
+    def enable(self):
+        self.button.config(state = NORMAL)
+    
+    def disable(self):
+        self.button.config(state = DISABLED)
+
+    def click(self, row, col):
+        if self.clicked == False:
+            if not Node.start_point:
+                self.make_start()
+            elif not Node.end_point:
+                self.make_end()
+            else:
+                self.make_barrier()
+        else:
+            self.reset()
+            if self.start == True:
+                self.start = False
+                Node.start_point = None
+            elif self.end == True:
+                self.end = False
+                Node.end_point = None
+            else:
+                self.barrier = False
+
+    def update_neighbors(self, grid):
+        self.neighbors = []
+
+        # check neighbors a row down - if not outside grid and not barrier
+        if self.row < (self.total_rows - 1) and not grid[self.row + 1][self.col].barrier:
+            # add this node to neighbor list
+            self.neighbors.append(grid[self.row + 1][self.col])
+
+        # check neighbors a row up - if not outside grid and not barrier
+        if self.row > 0 and not grid[self.row - 1][self.col].barrier:
+            self.neighbors.append(grid[self.row - 1][self.col])
+
+        # check neighbors a col right:
+        if self.col < (self.total_rows - 1) and not grid[self.row][self.col + 1].barrier:
+            self.neighbors.append(grid[self.row][self.col + 1])
+
+        # check neighbors a col left:
+        if self.col > 0 and not grid[self.row][self.col - 1].barrier:
+            self.neighbors.append(grid[self.row][self.col - 1])
+
+
+# to make grid in our canvas window
 def make_grid(width, rows):
     gap = width // rows
     offset = 2
@@ -98,6 +145,15 @@ def make_grid(width, rows):
             grid[i].append(node)
     return grid
 
+
+def h(a, b):
+    # heuristic function - manhatten distance
+    return abs(a.row - b.row) + abs(a.col - b.col)
+
+
+
+
+# inatilize grid
 grid = make_grid(WIDTH, ROWS)
 
 root.mainloop()
