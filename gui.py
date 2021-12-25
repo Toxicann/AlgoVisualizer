@@ -123,34 +123,5 @@ def mainWindow():
 
     window.close()
 
-# Dont know if it is necessary to integrate a popup window.
-# if integrated will be a simple one tho
-# interactive popup needs a lot of code which changes the structure of code, may encounter some major bugs
-
-# some basic ideas are below with no any logic on it.
-
-# def popupWin1():
-#   layout = [
-#     [sg.Text("A Quick Challenge")],
-#     [sg.Text("Which of these are in Sorted Order?")],
-#     [sg.Radio("2 5 8 9", group_id='radio_popup', key = 'CORRECTRANS')],
-#     [sg.Radio("2 8 5 9", group_id='radio_popup')],
-#     [sg.Radio("9 5 2 9", group_id='radio_popup')],
-#     [sg.Submit()]
-#   ]
-
-#   window = sg.Window("popup Window", layout, size = (400, 250)).read(close = True)
-
-# def popupWin2():
-#   layout = [
-#     [sg.Text("Some Questions Here")],
-#     [sg.Input("ans here")],
-#     [sg.Submit()]b
-#   ]
-
-    window = sg.Window("popup Window", layout,
-                       size=(400, 250)).read(close=True)
-
-
 if __name__ == '__main__':
     mainWindow()
