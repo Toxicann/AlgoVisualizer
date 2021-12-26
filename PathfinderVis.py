@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter import ttk
 from queue import PriorityQueue
 from collections import deque
@@ -83,16 +84,16 @@ class Node:
         self.button.config(bg="purple")
 
     def make_open(self):
-        self.buttonn.config(bg='cornflower blue')
+        self.button.config(bg='cornflower blue')
 
     def make_closed(self):
         self.button.config(bg='LightSkyBlue2')
 
     def enable(self):
-        self.button.config(state = NORMAL)
-    
+        self.button.config(state=NORMAL)
+
     def disable(self):
-        self.button.config(state = DISABLED)
+        self.button.config(state=DISABLED)
 
     def click(self, row, col):
         if self.clicked == False:
@@ -148,12 +149,204 @@ def make_grid(width, rows):
 
 def h(a, b):
     # heuristic function - manhatten distance
-    return abs(a.row - b.row) + abs(a.col - b.col)
+    return abs(a.col - b.col) + abs(a.row - b.row)
+
+# To reset the whole canvas state:
 
 
+def Reset():
+    global grid
+
+    Node.start_point = None
+    Node.end_point = None
+
+    for row in grid:
+        for node in row:
+            node.reset()
+            node.neighbors = []
+            node.g = float('inf')
+            node.h = 0
+            node.f = float('inf')
+            node.parent = None
+            node.start = False
+            node.end = False
+            node.barrier = False
+            node.enable()
 
 
-# inatilize grid
+def reconstruct_path(node, tickTime):
+    current = node
+    while current.start == False:
+        parent = current.parent
+            
+        parent.make_path()
+        root.update_idletasks()
+        time.sleep(tickTime)
+
+        current = parent
+
+def breadth_first(grid, tickTime):
+    
+    start = grid[Node.start_point[1]][Node.start_point[0]]
+    end = grid[Node.end_point[1]][Node.end_point[0]]
+    
+    open_set = deque()
+    
+    open_set.append(start)
+    visited_hash = {start}
+    
+    while len(open_set) > 0:
+        current = open_set.popleft()
+        
+        # found end?
+        if current == end:
+            reconstruct_path(end, tickTime)
+            
+            # draw end and start again
+            end.make_end()
+            start.make_start()
+            return
+        
+        # if not end - consider all neighbors of current Node to choose next step
+        for neighbor in current.neighbors:
+            
+            if neighbor not in visited_hash:
+                neighbor.parent = current
+                visited_hash.add(neighbor)
+                open_set.append(neighbor)
+                neighbor.make_open()
+                
+        # draw updated grid with new open_set        
+        root.update_idletasks()
+        time.sleep(tickTime)
+        
+        if current != start:
+            current.make_closed()
+            
+    # didn't find path
+    messagebox.showinfo("No Solution", "There was no solution")
+
+    return False
+
+def a_star(grid, tickTime):
+
+    count = 0
+    start = grid[Node.start_point[1]][Node.start_point[0]]
+    end = grid[Node.end_point[1]][Node.end_point[0]]
+    
+    # create open_set
+    open_set = PriorityQueue()
+    
+    # add start in open_set with f_score = 0 and count as one item
+    open_set.put((0, count, start))
+
+    # put g_score for start to 0    
+    start.g = 0
+    
+    # calculate f_score for start using heuristic function
+    start.f = h(start, end)
+    
+    # create a dict to keep track of spots in open_set, can't check PriorityQueue
+    open_set_hash = {start}
+    
+    # if open_set is empty - all possible spots are considered, path doesn't exist
+    while not open_set.empty():
+        
+        # popping the Node with lowest f_score from open_set
+        # if score the same, then whatever was inserted first - PriorityQueue
+        # popping [2] - Node itself
+        current = open_set.get()[2]
+        # syncronise with dict
+        open_set_hash.remove(current)
+        
+        # found end?
+        if current == end:
+            reconstruct_path(end, tickTime)
+            
+            # draw end and start again
+            end.make_end()
+            start.make_start()
+            
+            # enable UI frame
+            for child in UI_frame.winfo_children():
+                child.configure(state='normal')
+            return True
+        
+        # if not end - consider all neighbors of current Node to choose next step
+        for neighbor in current.neighbors:
+            
+            # calculate g_score for every neighbor
+            temp_g_score = current.g + 1
+            
+            # if new path through this neighbor better
+            if temp_g_score < neighbor.g:
+                
+                # update g_score for this Node and keep track of new best path
+                neighbor.parent = current
+                neighbor.g = temp_g_score
+                neighbor.f = temp_g_score + h(neighbor, end)
+                
+                if neighbor not in open_set_hash:
+                    
+                    # count the step
+                    count += 1
+                    
+                    # add neighbor in open_set for consideration
+                    open_set.put((neighbor.f, count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_open()
+        
+        # draw updated grid with new open_set        
+        root.update_idletasks()
+        time.sleep(tickTime)
+        
+        if current != start:
+            current.make_closed()
+            
+    # didn't find path
+    messagebox.showinfo("No Solution", "There was no solution" )
+
+    return False
+
+def StartAlgorithm():
+    global grid
+    if not grid:
+        return
+    if not Node.start_point or not Node.end_point:
+        messagebox.showinfo(title="No start/end",
+                            message="Place start and ending points")
+        return
+
+    # update neighbors based on current state
+    for row in grid:
+        for node in row:
+            node.neighbors = []
+            node.g = float('inf')
+            node.h = 0
+            node.f = float('inf')
+            node.parent = None
+            node.update_neighbors(grid)
+            if node.clicked == False:
+                node.reset()
+            node.disable()  # disable Buttons
+
+    # disable UI frame for running algortihm
+    for child in UI_frame.winfo_children():
+        child.configure(state="disable")
+
+    # choose algorithm here...............
+    a_star(grid, 0.05)
+    # algortihm goes above................
+
+    # enable all the disabled buttons and UI for next turn
+
+    for child in UI_frame.winfo_children():
+        child.configure(state="normal")
+
+
+Button(UI_frame, text = "start", command=StartAlgorithm).grid(row = 1, column = 1)
+
+# initailize grid
 grid = make_grid(WIDTH, ROWS)
 
 root.mainloop()
