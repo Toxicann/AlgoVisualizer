@@ -210,7 +210,6 @@ def breadth_first(grid, tickTime):
         
         # if not end - consider all neighbors of current Node to choose next step
         for neighbor in current.neighbors:
-            
             if neighbor not in visited_hash:
                 neighbor.parent = current
                 visited_hash.add(neighbor)
@@ -250,11 +249,14 @@ def depth_first(grid, tickTime):
             return
         
     # if not end - consider all neighbors of current Node to choose next step
+        if current not in visited_hash:
+            visited_hash.add(current)
+
         for neighbor in current.neighbors:
             
             if neighbor not in visited_hash:
                 neighbor.parent = current
-                visited_hash.add(neighbor)
+                # visited_hash.add(neighbor)
                 open_set.append(neighbor)
                 neighbor.make_open()
                 
@@ -374,7 +376,7 @@ def StartAlgorithm():
         child.configure(state="disable")
 
     # choose algorithm here...............
-    threading.Thread(target=a_star(grid, 0.1))
+    threading.Thread(target=depth_first(grid, 0.1))
     # algortihm goes above................
 
     # enable all the disabled buttons and UI for next turn
