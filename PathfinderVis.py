@@ -5,6 +5,7 @@ from queue import PriorityQueue
 from collections import deque
 import random
 import time
+import threading
 
 root = Tk()
 root.title("Path Finding Visualizer")
@@ -149,7 +150,7 @@ def make_grid(width, rows):
 
 def h(a, b):
     # heuristic function - manhatten distance
-    return abs(a.col - b.col) + abs(a.row - b.row)
+    return abs(a.row - b.row) + abs(a.col - b.col)
 
 # To reset the whole canvas state:
 
@@ -228,6 +229,44 @@ def breadth_first(grid, tickTime):
 
     return False
 
+def depth_first(grid, tickTime):
+    start = grid[Node.start_point[1]][Node.start_point[0]]
+    end = grid[Node.end_point[1]][Node.end_point[0]]
+
+    open_set = deque([])
+    open_set.append(start)
+    visited_hash = {start}
+
+    while len(open_set) > 0:
+        current = open_set.pop()
+        
+        # found end?
+        if current == end:
+            reconstruct_path(end, tickTime)
+            
+            # draw end and start again
+            end.make_end()
+            start.make_start()
+            return
+        
+    # if not end - consider all neighbors of current Node to choose next step
+        for neighbor in current.neighbors:
+            
+            if neighbor not in visited_hash:
+                neighbor.parent = current
+                visited_hash.add(neighbor)
+                open_set.append(neighbor)
+                neighbor.make_open()
+                
+        # draw updated grid with new open_set        
+        root.update_idletasks()
+        time.sleep(tickTime)
+        
+        if current != start:
+            current.make_closed()
+
+    return False
+
 def a_star(grid, tickTime):
 
     count = 0
@@ -246,10 +285,10 @@ def a_star(grid, tickTime):
     # calculate f_score for start using heuristic function
     start.f = h(start, end)
     
-    # create a dict to keep track of spots in open_set, can't check PriorityQueue
+    # create a dict to keep track of nodes in open_set, can't check PriorityQueue
     open_set_hash = {start}
     
-    # if open_set is empty - all possible spots are considered, path doesn't exist
+    # if open_set is empty - all possible nodes are considered, path doesn't exist
     while not open_set.empty():
         
         # popping the Node with lowest f_score from open_set
@@ -335,7 +374,7 @@ def StartAlgorithm():
         child.configure(state="disable")
 
     # choose algorithm here...............
-    a_star(grid, 0.05)
+    threading.Thread(target=a_star(grid, 0.1))
     # algortihm goes above................
 
     # enable all the disabled buttons and UI for next turn
@@ -346,7 +385,7 @@ def StartAlgorithm():
 
 Button(UI_frame, text = "start", command=StartAlgorithm).grid(row = 1, column = 1)
 
-# initailize grid
 grid = make_grid(WIDTH, ROWS)
-
 root.mainloop()
+
+
