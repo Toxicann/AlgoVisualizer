@@ -29,7 +29,8 @@ def init_pathfinder():
     UI_frame.pack(side=RIGHT, padx=10, pady=5)
 
     myGui.getVal(canvas, root, UI_frame) #sending vars to Pathfinder Logic
-    run()
+    init_grid()
+    
     Button(UI_frame, text = "start", command=StartAlgorithm).grid(row = 1, column = 1)
 
     root.mainloop()

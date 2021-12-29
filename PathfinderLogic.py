@@ -428,6 +428,6 @@ def StartAlgorithm():
 
     for child in myGui.UI_frame.winfo_children():
         child.configure(state="normal")
-        
-def run():
+
+def init_grid():
     grid = make_grid(WIDTH, ROWS)
