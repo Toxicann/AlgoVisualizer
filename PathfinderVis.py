@@ -1,9 +1,9 @@
+from os import curdir
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from queue import PriorityQueue
 from collections import deque
-import random
 import time
 import threading
 
@@ -269,6 +269,56 @@ def depth_first(grid, tickTime):
 
     return False
 
+def djkstra(grid, tickTime):
+
+    count = 0
+    start = grid[Node.start_point[1]][Node.start_point[0]]
+    end = grid[Node.end_point[1]][Node.end_point[0]]
+
+    open_set = PriorityQueue()
+    open_set_hash = {}
+
+    open_set.put((0, count, start))
+
+    start.g = 0
+
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        current = open_set.get()[2]
+        open_set_hash.remove(current)
+
+        if current == end:
+            reconstruct_path(end, tickTime)
+            
+            # draw end and start again
+            end.make_end()
+            start.make_start()
+            
+            # enable UI frame
+            for child in UI_frame.winfo_children():
+                child.configure(state='normal')
+            return True
+        
+        for neighbor in current.neighbors:
+            temp_g_score = current.g + 1
+
+            if temp_g_score < neighbor.g:
+                neighbor.parent = current
+                neighbor.g = temp_g_score
+
+                if neighbor not in open_set_hash:
+                    count += 1
+                    open_set.put((neighbor.g, count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_open()
+
+        root.update_idletasks()
+        time.sleep(tickTime)
+        
+        if current != start:
+            current.make_closed()
+
 def a_star(grid, tickTime):
 
     count = 0
@@ -372,11 +422,16 @@ def StartAlgorithm():
             node.disable()  # disable Buttons
 
     # disable UI frame for running algortihm
+
+    for row in grid:
+        for node in row:
+            node.enable()
+    
     for child in UI_frame.winfo_children():
         child.configure(state="disable")
 
     # choose algorithm here...............
-    threading.Thread(target=depth_first(grid, 0.1))
+    threading.Thread(target=djkstra(grid, 0.05))
     # algortihm goes above................
 
     # enable all the disabled buttons and UI for next turn
