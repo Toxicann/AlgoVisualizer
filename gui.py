@@ -1,7 +1,10 @@
 from tkinter import messagebox
 import PySimpleGUI as sg
+from PathfinderVis import init_pathfinder
 
 from SortingVis import *
+from PathfinderLogic import *
+
 
 sg.theme('dark grey 8')
 
@@ -116,10 +119,7 @@ def mainWindow():
             window.un_hide()
 
         elif eventMain == '-PATHWIN-':
-            window.hide()
-            messagebox.showinfo(title="Pathfinding",
-                                message="Please contact Developer (WIP)")
-            window.un_hide()
+            init_pathfinder()
 
     window.close()
 
