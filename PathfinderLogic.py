@@ -6,16 +6,21 @@ import time
 import threading
 
 #global vars
-WIDTH = 500
+WIDTH = 600
 ROWS = 25
 grid = []
 
+
 class myGui:
     @classmethod
-    def getVal(cls, canvas, root, UI_frame):
+    def getVal(cls, canvas, root, radio, button, selectedalg):
         cls.canvas = canvas
         cls.root = root
-        cls.UI_frame = UI_frame
+        cls.radio = radio
+        cls.button = button
+        cls.selectedalg = selectedalg
+        
+
 
 class Node(myGui):
 
@@ -87,23 +92,26 @@ class Node(myGui):
         self.button.config(state=DISABLED)
 
     def click(self, row, col):
-        if self.clicked == False:
-            if not Node.start_point:
-                self.make_start()
-            elif not Node.end_point:
-                self.make_end()
+        if self.button['state'] == 'normal':
+            if self.clicked == False:
+                if not Node.start_point:
+                    self.make_start()
+                elif not Node.end_point:
+                    self.make_end()
+                else:
+                    self.make_barrier()
             else:
-                self.make_barrier()
+                self.reset()
+                if self.start == True:
+                    self.start = False
+                    Node.start_point = None
+                elif self.end == True:
+                    self.end = False
+                    Node.end_point = None
+                else:
+                    self.barrier = False  
         else:
-            self.reset()
-            if self.start == True:
-                self.start = False
-                Node.start_point = None
-            elif self.end == True:
-                self.end = False
-                Node.end_point = None
-            else:
-                self.barrier = False
+            pass
 
     def update_neighbors(self, grid):
         self.neighbors = []
@@ -169,35 +177,36 @@ def reconstruct_path(node, tickTime):
     current = node
     while current.start == False:
         parent = current.parent
-            
+
         parent.make_path()
         myGui.root.update_idletasks()
         time.sleep(tickTime)
 
         current = parent
 
+
 def breadth_first(grid, tickTime):
-    
+
     start = grid[Node.start_point[1]][Node.start_point[0]]
     end = grid[Node.end_point[1]][Node.end_point[0]]
-    
+
     open_set = deque()
-    
+
     open_set.append(start)
     visited_hash = {start}
-    
+
     while len(open_set) > 0:
         current = open_set.popleft()
-        
+
         # found end?
         if current == end:
             reconstruct_path(end, tickTime)
-            
+
             # draw end and start again
             end.make_end()
             start.make_start()
             return
-        
+
         # if not end - consider all neighbors of current Node to choose next step
         for neighbor in current.neighbors:
             if neighbor not in visited_hash:
@@ -205,18 +214,19 @@ def breadth_first(grid, tickTime):
                 visited_hash.add(neighbor)
                 open_set.append(neighbor)
                 neighbor.make_open()
-                
-        # draw updated grid with new open_set        
+
+        # draw updated grid with new open_set
         myGui.root.update_idletasks()
         time.sleep(tickTime)
-        
+
         if current != start:
             current.make_closed()
-            
+
     # didn't find path
     messagebox.showinfo("No Solution", "There was no solution")
 
     return False
+
 
 def depth_first(grid, tickTime):
     start = grid[Node.start_point[1]][Node.start_point[0]]
@@ -228,36 +238,37 @@ def depth_first(grid, tickTime):
 
     while len(open_set) > 0:
         current = open_set.pop()
-        
+
         # found end?
         if current == end:
             reconstruct_path(end, tickTime)
-            
+
             # draw end and start again
             end.make_end()
             start.make_start()
             return
-        
+
     # if not end - consider all neighbors of current Node to choose next step
         if current not in visited_hash:
             visited_hash.add(current)
 
         for neighbor in current.neighbors:
-            
+
             if neighbor not in visited_hash:
                 neighbor.parent = current
                 # visited_hash.add(neighbor)
                 open_set.append(neighbor)
                 neighbor.make_open()
-                
-        # draw updated grid with new open_set        
+
+        # draw updated grid with new open_set
         myGui.root.update_idletasks()
         time.sleep(tickTime)
-        
+
         if current != start:
             current.make_closed()
 
     return False
+
 
 def djkstra(grid, tickTime):
 
@@ -280,16 +291,18 @@ def djkstra(grid, tickTime):
 
         if current == end:
             reconstruct_path(end, tickTime)
-            
+
             # draw end and start again
             end.make_end()
             start.make_start()
-            
+
             # enable UI frame
-            for child in myGui.UI_frame.winfo_children():
+            for child in myGui.radio.winfo_children():
+                child.configure(state='normal')
+            for child in myGui.button.winfo_children():
                 child.configure(state='normal')
             return True
-        
+
         for neighbor in current.neighbors:
             temp_g_score = current.g + 1
 
@@ -305,89 +318,91 @@ def djkstra(grid, tickTime):
 
         myGui.root.update_idletasks()
         time.sleep(tickTime)
-        
+
         if current != start:
             current.make_closed()
+
 
 def a_star(grid, tickTime):
 
     count = 0
     start = grid[Node.start_point[1]][Node.start_point[0]]
     end = grid[Node.end_point[1]][Node.end_point[0]]
-    
+
     # create open_set
     open_set = PriorityQueue()
-    
+
     # add start in open_set with f_score = 0 and count as one item
     open_set.put((0, count, start))
 
-    # put g_score for start to 0    
+    # put g_score for start to 0
     start.g = 0
-    
+
     # calculate f_score for start using heuristic function
     start.f = h(start, end)
-    
+
     # create a dict to keep track of nodes in open_set, can't check PriorityQueue
     open_set_hash = {start}
-    
+
     # if open_set is empty - all possible nodes are considered, path doesn't exist
     while not open_set.empty():
-        
+
         # popping the Node with lowest f_score from open_set
         # if score the same, then whatever was inserted first - PriorityQueue
         # popping [2] - Node itself
         current = open_set.get()[2]
         # syncronise with dict
         open_set_hash.remove(current)
-        
+
         # found end?
         if current == end:
             reconstruct_path(end, tickTime)
-            
+
             # draw end and start again
             end.make_end()
             start.make_start()
-            
+
             # enable UI frame
-            for child in myGui.UI_frame.winfo_children():
+            for child in myGui.canvas.winfo_children():
                 child.configure(state='normal')
             return True
-        
+
         # if not end - consider all neighbors of current Node to choose next step
         for neighbor in current.neighbors:
-            
+
             # calculate g_score for every neighbor
             temp_g_score = current.g + 1
-            
+
             # if new path through this neighbor better
             if temp_g_score < neighbor.g:
-                
+
                 # update g_score for this Node and keep track of new best path
                 neighbor.parent = current
                 neighbor.g = temp_g_score
                 neighbor.f = temp_g_score + h(neighbor, end)
-                
+
                 if neighbor not in open_set_hash:
-                    
+
                     # count the step
                     count += 1
-                    
+
                     # add neighbor in open_set for consideration
                     open_set.put((neighbor.f, count, neighbor))
                     open_set_hash.add(neighbor)
                     neighbor.make_open()
-        
-        # draw updated grid with new open_set        
+
+        # draw updated grid with new open_set
         myGui.root.update_idletasks()
         time.sleep(tickTime)
-        
+
         if current != start:
             current.make_closed()
-            
+
     # didn't find path
-    messagebox.showinfo("No Solution", "There was no solution" )
+    messagebox.showinfo("No Solution", "There was no solution")
 
     return False
+
 
 def StartAlgorithm():
     global grid
@@ -413,21 +428,39 @@ def StartAlgorithm():
 
     # disable UI frame for running algortihm
 
-    for row in grid:
-        for node in row:
-            node.enable()
-    
-    for child in myGui.UI_frame.winfo_children():
+    for child in myGui.radio.winfo_children(): #disabling radio buttons
+        child.configure(state="disable")
+
+    for child in myGui.button.winfo_children(): #disabling buttons
         child.configure(state="disable")
 
     # choose algorithm here...............
-    threading.Thread(target=djkstra(grid, 0.05))
+    if myGui.selectedalg.get() == 'breadth_first':
+        threading.Thread(target=breadth_first(grid, 0.1))
+    elif myGui.selectedalg.get() == 'depth_first':
+        threading.Thread(target=depth_first(grid, 0.1))
+    elif myGui.selectedalg.get() == 'djkstra':
+        threading.Thread(target=djkstra(grid, 0.1))
+    elif myGui.selectedalg.get() == 'a_star':
+        threading.Thread(target=a_star(grid, 0.1))
+    else:
+        messagebox.showinfo("Pick Algorithm", "Choose an algorithm before generating Path")
+
     # algortihm goes above................
 
     # enable all the disabled buttons and UI for next turn
+    for row in grid:
+        for node in row:
+            node.enable()
 
-    for child in myGui.UI_frame.winfo_children():
+    for child in myGui.radio.winfo_children():
         child.configure(state="normal")
+
+    for child in myGui.button.winfo_children():
+        child.configure(state="normal")
+
 
 def init_grid():
     grid = make_grid(WIDTH, ROWS)
+
+

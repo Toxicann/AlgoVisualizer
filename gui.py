@@ -1,6 +1,8 @@
 from tkinter import messagebox
 import PySimpleGUI as sg
-from PathfinderVis import init_pathfinder
+from PySimpleGUI.PySimpleGUI import StatusBar
+import PathfinderVis
+import subprocess
 
 from SortingVis import *
 from PathfinderLogic import *
@@ -119,9 +121,12 @@ def mainWindow():
             window.un_hide()
 
         elif eventMain == '-PATHWIN-':
-            init_pathfinder()
+            window.hide()
+            subprocess.run(['python', 'PathfinderVis.py'])
+            window.un_hide()
 
     window.close()
+
 
 if __name__ == '__main__':
     mainWindow()

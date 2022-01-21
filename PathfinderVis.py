@@ -13,6 +13,7 @@ def init_pathfinder():
     root.title("Path Finding Visualizer")
     root.maxsize(1200, 613)
     root.config(bg="#19232d")
+    selectedalg = StringVar()
 
     # Creating empty Canvas window (on left side for pathfinding window)
     canvas = Canvas(root, width=WIDTH, height=WIDTH, bg="gray4")
@@ -21,9 +22,6 @@ def init_pathfinder():
     # Creating Empty Frame for UI later on -  on right Side
     UI_frame = Frame(root, width=600, height=1200, bg="#19232d")
     UI_frame.pack(side=RIGHT, padx=10, pady=5)
-
-    myGui.getVal(canvas, root, UI_frame)  # sending vars to Pathfinder Logic
-    init_grid()
 
     # GUI WINDOW BUTTONS/ RADIOBUTTONS and other things below here:
 
@@ -35,19 +33,25 @@ def init_pathfinder():
     rbutton_frame = Frame(UI_frame, bg="#19232d", bd=1, relief=SUNKEN)
     rbutton_frame.grid(row=2, column=0, padx=10, pady=10)
 
-    rbval = Radiobutton(rbutton_frame, text="Breadth First Algorithm", variable = 1, value= breadth_first , justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
-                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=0, padx=5, pady=5, sticky="W")
-    rbval = Radiobutton(rbutton_frame, text="Depth First Algorithm", variable = 1, value= depth_first, justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
-                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=0, padx=5, pady=5, sticky="W")
-    rbval = Radiobutton(rbutton_frame, text="Djkstra Algortihm", variable = 1, value= djkstra, justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
-                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=1, padx=5, pady=5, sticky="W")
-    rbval = Radiobutton(rbutton_frame, text="A Star Algorithm", variable = 1, value= a_star, justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
-                bg="#19232d", fg="white", font=("Arial", 15), state="active").grid(row=1, column=1, padx=5, pady=5, sticky="W")
-
     button_frame = Frame(UI_frame, bg="#19232d")
     button_frame.grid(row=3, column=0, padx=10, pady=5)
+
+    myGui.getVal(canvas, root, rbutton_frame, button_frame,
+                 selectedalg)  # sending vars to Pathfinder Logic
+    init_grid()
+
+    Radiobutton(rbutton_frame, text="Breadth First Algorithm", variable= selectedalg, value='breadth_first', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
+                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=0, padx=5, pady=5, sticky="W")
+    Radiobutton(rbutton_frame, text="Depth First Algorithm", variable=selectedalg, value='depth_first', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
+                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=0, padx=5, pady=5, sticky="W")
+    Radiobutton(rbutton_frame, text="Djkstra Algortihm", variable=selectedalg, value='djkstra', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
+                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=1, padx=5, pady=5, sticky="W")
+    Radiobutton(rbutton_frame, text="A Star Algorithm", variable=selectedalg, value='a_star', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
+                bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=1, padx=5, pady=5, sticky="W")
+                
+
     Button(button_frame, text="GeneratePath", bg="#32414b", fg="white",
-           font=("Arial", 20), command = lambda : print(rbval)).pack(side=LEFT, padx=10, pady=5)
+           font=("Arial", 20), command=StartAlgorithm).pack(side=LEFT, padx=10, pady=5)
     Button(button_frame, text="Reset", bg="#32414b", fg="white",
            font=("Arial", 20), command=Reset).pack(side=RIGHT, padx=10, pady=5)
 
