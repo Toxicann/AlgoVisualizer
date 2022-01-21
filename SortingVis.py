@@ -55,14 +55,14 @@ class myVals:
     def getVal(cls, value1, value2):
         cls.N = value1
         cls.sortVal = value2
-        print(cls.N, cls.sortVal)
+        # print(cls.N, cls.sortVal)
 
 
 def run():
     FPS = 60.0
     arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
     np.random.shuffle(arr)
-    print(myVals.N)
+    # print(myVals.N)
     arr = TrackedArray(arr)
 
     ##################################
