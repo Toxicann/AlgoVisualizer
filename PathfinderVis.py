@@ -55,7 +55,7 @@ def init_pathfinder():
     Button(button_frame, text="Reset", bg="#32414b", fg="white",
            font=("Arial", 20), command=Reset).pack(side=RIGHT, padx=10, pady=5)
     Button(button_frame, text="Generate", bg="#32414b", fg="white",
-           font=("Arial", 20), command = Node.generate_premaze).pack(side="bottom", padx=10, pady=5)
+           font=("Arial", 20), command = Node.generate_prebuilt_maze).pack(side="bottom", padx=10, pady=5)
 
     root.mainloop()
 

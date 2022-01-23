@@ -113,7 +113,7 @@ class Node(myGui):
         else:
             pass
 
-    def generate_premaze():
+    def generate_prebuilt_maze():
         for i in range(0, 25):
             grid[i][0].make_barrier()
             grid[0][i].make_barrier()
@@ -146,11 +146,6 @@ class Node(myGui):
         for i in range(11, 14):
             grid[i][9].make_barrier()
             grid[i][17].make_barrier()
-
-
-        # for i in range():
-        #     for j in range(1,7):
-
 
     def update_neighbors(self, grid):
         self.neighbors = []
@@ -474,13 +469,13 @@ def StartAlgorithm():
 
     # choose algorithm here...............
     if myGui.selectedalg.get() == 'breadth_first':
-        threading.Thread(target=breadth_first(grid, 0.1))
+        threading.Thread(target=breadth_first(grid, 0.12))
     elif myGui.selectedalg.get() == 'depth_first':
-        threading.Thread(target=depth_first(grid, 0.1))
+        threading.Thread(target=depth_first(grid, 0.12))
     elif myGui.selectedalg.get() == 'djkstra':
-        threading.Thread(target=djkstra(grid, 0.1))
+        threading.Thread(target=djkstra(grid, 0.12))
     elif myGui.selectedalg.get() == 'a_star':
-        threading.Thread(target=a_star(grid, 0.1))
+        threading.Thread(target=a_star(grid, 0.12))
     else:
         messagebox.showinfo("Pick Algorithm", "Choose an algorithm before generating Path")
 
