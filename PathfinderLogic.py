@@ -9,7 +9,7 @@ import threading
 WIDTH = 600
 ROWS = 25
 grid = []
-
+tickTime = 0.03
 
 class myGui:
     @classmethod
@@ -214,7 +214,9 @@ def reconstruct_path(node, tickTime):
 
         parent.make_path()
         myGui.root.update_idletasks()
-        time.sleep(tickTime)
+        t = threading.Thread(target = time.sleep(tickTime))
+        t.start()
+        t.join()
 
         current = parent
 
@@ -251,7 +253,9 @@ def breadth_first(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        time.sleep(tickTime)
+        t = threading.Thread(target = time.sleep(tickTime))
+        t.start()
+        t.join()
 
         if current != start:
             current.make_closed()
@@ -296,7 +300,9 @@ def depth_first(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        time.sleep(tickTime)
+        t = threading.Thread(target = time.sleep(tickTime))
+        t.start()
+        t.join()
 
         if current != start:
             current.make_closed()
@@ -351,7 +357,9 @@ def djkstra(grid, tickTime):
                     neighbor.make_open()
 
         myGui.root.update_idletasks()
-        time.sleep(tickTime)
+        t = threading.Thread(target = time.sleep(tickTime))
+        t.start()
+        t.join()
 
         if current != start:
             current.make_closed()
@@ -427,7 +435,9 @@ def a_star(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        time.sleep(tickTime)
+        t = threading.Thread(target = time.sleep(tickTime))
+        t.start()
+        t.join()
 
         if current != start:
             current.make_closed()
@@ -436,6 +446,9 @@ def a_star(grid, tickTime):
     messagebox.showinfo("No Solution", "There was no solution")
 
     return False
+    
+def thread_startalgo():
+    threading.Thread(target = StartAlgorithm).start()
 
 def StartAlgorithm():
     global grid
@@ -469,13 +482,13 @@ def StartAlgorithm():
 
     # choose algorithm here...............
     if myGui.selectedalg.get() == 'breadth_first':
-        threading.Thread(target=breadth_first(grid, 0.12))
+        threading.Thread(target=breadth_first(grid, tickTime)).start()
     elif myGui.selectedalg.get() == 'depth_first':
-        threading.Thread(target=depth_first(grid, 0.12))
+        threading.Thread(target=depth_first(grid, tickTime)).start()
     elif myGui.selectedalg.get() == 'djkstra':
-        threading.Thread(target=djkstra(grid, 0.12))
+        threading.Thread(target=djkstra(grid, tickTime)).start()
     elif myGui.selectedalg.get() == 'a_star':
-        threading.Thread(target=a_star(grid, 0.12))
+        threading.Thread(target=a_star(grid, tickTime)).start()
     else:
         messagebox.showinfo("Pick Algorithm", "Choose an algorithm before generating Path")
 

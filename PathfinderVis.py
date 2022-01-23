@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-import time
 
 from PathfinderLogic import *
 
@@ -51,7 +50,7 @@ def init_pathfinder():
                 
 
     Button(button_frame, text="Start", bg="#32414b", fg="white",
-           font=("Arial", 20), command=StartAlgorithm).pack(side=LEFT, padx=10, pady=5)
+           font=("Arial", 20), command=thread_startalgo).pack(side=LEFT, padx=10, pady=5)
     Button(button_frame, text="Reset", bg="#32414b", fg="white",
            font=("Arial", 20), command=Reset).pack(side=RIGHT, padx=10, pady=5)
     Button(button_frame, text="Generate", bg="#32414b", fg="white",
