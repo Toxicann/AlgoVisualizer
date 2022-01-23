@@ -113,6 +113,45 @@ class Node(myGui):
         else:
             pass
 
+    def generate_premaze():
+        for i in range(0, 25):
+            grid[i][0].make_barrier()
+            grid[0][i].make_barrier()
+            grid[i][24].make_barrier()
+            grid[24][i].make_barrier()
+        
+        for i in range(1, 8):
+            for j in range(2, 25, 2):
+                grid[j][i].make_barrier()
+            for k in range(9, 18, 2):
+                grid[i][k].make_barrier()
+            
+
+        for i in range(19, 24):
+            for j in range(2, 23, 2):
+                grid[j][i].make_barrier()
+
+        for i in range(17, 24):
+            for j in range(9, 18, 2):
+                grid[i][j].make_barrier()
+
+        for i in range(9, 18):
+            grid[9][i].make_barrier()
+            grid[15][i].make_barrier()
+        
+        for i in range(11, 16):
+            grid[11][i].make_barrier()
+            grid[13][i].make_barrier()
+
+        for i in range(11, 14):
+            grid[i][9].make_barrier()
+            grid[i][17].make_barrier()
+
+
+        # for i in range():
+        #     for j in range(1,7):
+
+
     def update_neighbors(self, grid):
         self.neighbors = []
 
@@ -402,7 +441,6 @@ def a_star(grid, tickTime):
     messagebox.showinfo("No Solution", "There was no solution")
 
     return False
-
 
 def StartAlgorithm():
     global grid

@@ -50,10 +50,12 @@ def init_pathfinder():
                 bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=1, padx=5, pady=5, sticky="W")
                 
 
-    Button(button_frame, text="GeneratePath", bg="#32414b", fg="white",
+    Button(button_frame, text="Start", bg="#32414b", fg="white",
            font=("Arial", 20), command=StartAlgorithm).pack(side=LEFT, padx=10, pady=5)
     Button(button_frame, text="Reset", bg="#32414b", fg="white",
            font=("Arial", 20), command=Reset).pack(side=RIGHT, padx=10, pady=5)
+    Button(button_frame, text="Generate", bg="#32414b", fg="white",
+           font=("Arial", 20), command = Node.generate_premaze).pack(side="bottom", padx=10, pady=5)
 
     root.mainloop()
 
