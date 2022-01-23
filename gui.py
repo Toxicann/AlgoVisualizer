@@ -68,7 +68,8 @@ def sortingWindow():
             sortVal = 4
 
         if eventSort == '-GEN-':
-            window['-CANVAS-'].update('')
+            delete_figure_agg(figure_agg)
+            window['-CANVAS-'].update('test')
             myVals.getVal(valueSort['-SLIDER-'], sortVal)
             fig, ani = run()
             figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)
