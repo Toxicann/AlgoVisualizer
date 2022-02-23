@@ -48,18 +48,29 @@ class TrackedArray():
 
 
 class myVals:
-    N = 30
+    N = 15
     sortVal = 4
+    speedVal = 3
 
     @classmethod
-    def getVal(cls, value1, value2):
+    def getVal(cls, value1, value2, value3):
         cls.N = value1
         cls.sortVal = value2
+        cls.speedVal = value3
         # print(cls.N, cls.sortVal)
 
 
 def run():
-    FPS = 60.0
+    if myVals.speedVal == 1:
+        FPS = 400
+    elif myVals.speedVal == 2:
+        FPS = 250
+    elif myVals.speedVal == 3:
+        FPS = 100
+    elif myVals.speedVal == 4:
+        FPS = 50
+    else:
+        FPS = 1000/60.0
     arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
     np.random.shuffle(arr)
     # print(myVals.N)
@@ -96,8 +107,9 @@ def run():
         dt = time.perf_counter() - t0
     #####################################
 
-    print(f"-------{sorter} sort-----------")
-    print(f"Array sorted in {dt*1E3:.1f} ms")
+    # print(f"-------{sorter} sort-----------")
+    # print(f"Array sorted in {dt*1E3:.1f} ms")
+    
 
     fig, ax = plt.subplots(figsize=(7.5, 15))
     container = ax.bar(np.arange(0, len(arr), 1),
@@ -107,7 +119,7 @@ def run():
     txt = ax.text(0, 1000, "")
 
     def update(frame):
-        txt.set_text(f"Accesses = {frame}")
+        txt.set_text(f"Accesses = {frame} \nSort Time = {dt*1E3:.1f}ms")
         for (rectangle, height) in zip(container.patches, arr.full_copies[frame]):
             rectangle.set_height(height)
             rectangle.set_color("#1f77b4")
@@ -121,7 +133,7 @@ def run():
         return(*container, txt)
 
     ani = FuncAnimation(fig, update, frames=range(
-        len(arr.full_copies)), blit=True, interval=2500./FPS, repeat=False)
+        len(arr.full_copies)), blit=True, interval=FPS, repeat=False)
     return fig, ani
 
 

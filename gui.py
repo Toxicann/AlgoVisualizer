@@ -21,6 +21,15 @@ def sortingWindow():
             sg.Radio('Quick Sort', disabled=False, font=(20), size=(15, 2), pad=(6, 10), group_id="sort", default=True, key='-QCK-', enable_events=True)]
     ]
 
+    slider_layout = [
+        [sg.Text('No. of Bars:')],
+        [sg.Slider(orientation='h', range=(2, 100), default_value=15,
+                   size=(38, 17), key='-SLIDER-', enable_events=True)],
+        [sg.Text('Sorter Speed:')],
+        [sg.Slider(orientation='h', range=(1, 4), default_value=3,
+                   size=(38, 17), key='-SPEED-', enable_events=True)],
+    ]
+
     leftCol = [
         [sg.Canvas(background_color='white', size=(720, 715), key='-CANVAS-')]
     ]
@@ -32,8 +41,7 @@ def sortingWindow():
         [sg.Text('', size=(10, 2))],
         [sg.Frame('Sorting Algorithms', button_layout)],
         [sg.Text('', size=(10, 2))],
-        [sg.Slider(orientation='h', range=(2, 100), default_value=45,
-                   size=(40, 20), key='-SLIDER-', enable_events=True)],
+        [sg.Frame('Advanced Settings', slider_layout)],
         [sg.Text('', size=(10, 1))],
         [sg.Button('Generate', font=(20), size=(15, 2), pad=(10, 10), key='-GEN-'),
             sg.Button('Clear', font=(20), size=(15, 2), pad=(10, 10), key='-CLR-')]
@@ -70,7 +78,7 @@ def sortingWindow():
         if eventSort == '-GEN-':
             delete_figure_agg(figure_agg)
             window['-CANVAS-'].update()
-            myVals.getVal(valueSort['-SLIDER-'], sortVal)
+            myVals.getVal(valueSort['-SLIDER-'], sortVal, valueSort['-SPEED-'])
             fig, ani = run()
             figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)
 
