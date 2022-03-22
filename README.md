@@ -1,4 +1,4 @@
-# AlgoVisualizer-Trinity-Project
+# AlgoVisualizer
 AlgoVisualizer is an algorithm visualization tool created for better understanding and inner workings of the algorithm. 
 Myself along with many experts belive that learning comes better with visualization. So this program is created for better graspment of the ways of Algorithms.
 
