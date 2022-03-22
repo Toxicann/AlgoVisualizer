@@ -89,7 +89,7 @@ def sortingWindow():
 
 
 def mainWindow():
-    leftCol = [[sg.Image('logo.gif', key='-IMG-', size=(500, 725))]]
+    leftCol = [[sg.Image('logo.png', key='-IMG-', size=(500, 725))]]
 
     rightCol = [
         [sg.Text("AlgoVisualizer", justification='center',

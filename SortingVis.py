@@ -66,9 +66,9 @@ def run():
     elif myVals.speedVal == 2:
         FPS = 250
     elif myVals.speedVal == 3:
-        FPS = 100
+        FPS = 75
     elif myVals.speedVal == 4:
-        FPS = 50
+        FPS = 5
     else:
         FPS = 1000/60.0
     arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
