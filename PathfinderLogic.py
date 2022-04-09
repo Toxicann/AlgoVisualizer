@@ -242,6 +242,7 @@ def make_grid(width, rows):
         for j in range(rows):
             node = Node(i, j, gap, offset, rows)
             grid[i].append(node)
+    print(grid)
     return grid
 
 

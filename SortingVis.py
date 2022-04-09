@@ -77,6 +77,8 @@ def run():
     a = list(map(int, a))
     if not a:
         arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
+        arr = list(map(int, arr))
+        np.random.seed(0)
         np.random.shuffle(arr)
     else:
         arr = a
@@ -96,6 +98,7 @@ def run():
 
         t0 = time.perf_counter()
         sortingAlgorithm.bubbleSort(arr)
+        print(arr)
         dt = time.perf_counter() - t0
     ####################################
 
@@ -123,9 +126,9 @@ def run():
     ax.set_xlim([0, len(arr)])
     ax.set(xlabel="Index", ylabel="Value", title=f"{sorter} sort")
     txt = ax.text(0, 1000, "")
-    # ax.bar_label(container, fmt='%.2f', padding=2)
 
     def update(frame):
+        # ax.bar_label(container, fmt='%.2f', padding=2)
         txt.set_text(f"Accesses = {frame} \nSort Time = {dt*1E3:.1f}ms")
         for (rectangle, height) in zip(container.patches, arr.full_copies[frame]):
             rectangle.set_height(height)
