@@ -11,6 +11,7 @@ ROWS = 25
 grid = []
 tickTime = 0.03
 
+
 class myGui:
     @classmethod
     def getVal(cls, canvas, root, radio, button, selectedalg):
@@ -19,7 +20,6 @@ class myGui:
         cls.radio = radio
         cls.button = button
         cls.selectedalg = selectedalg
-        
 
 
 class Node(myGui):
@@ -69,6 +69,11 @@ class Node(myGui):
         self.barrier = True
         self.clicked = True
 
+    def reset_barrier(self):
+        self.button.config(bg="white")
+        self.barrier = False
+        self.clicked = False
+
     def reset(self):
         self.button.config(bg="white")
         self.clicked = False
@@ -109,23 +114,83 @@ class Node(myGui):
                     self.end = False
                     Node.end_point = None
                 else:
-                    self.barrier = False  
+                    self.barrier = False
         else:
             pass
 
     def generate_prebuilt_maze():
+        Reset()
         for i in range(0, 25):
             grid[i][0].make_barrier()
             grid[0][i].make_barrier()
             grid[i][24].make_barrier()
             grid[24][i].make_barrier()
-        
+
+        grid[14][21].make_barrier()
+        grid[22][3].make_barrier()
+        grid[22][5].make_barrier()
+        grid[14][9].make_barrier()
+        grid[21][17].make_barrier()
+
+        for i in range(9, 24):
+            if(i != 11 and i != 13 and i != 17):
+                grid[i][18].make_barrier()
+        for i in range(1, 24):
+            if(i == 13 or i == 14 or i == 15 or i == 22):
+                grid[i][2].make_barrier()
+            if(i != 3 and i != 9 and i != 17 and i != 19):
+                grid[i][4].make_barrier()
+            if(i == 3 or i == 14 or i == 15 or i == 22):
+                grid[i][6].make_barrier()
+            if(i != 5 and i != 7 and i != 11 and i != 13 and i != 15 and i != 17 and i != 23):
+                grid[i][8].make_barrier()
+            if(i != 1 and i != 5 and i != 7 and i != 17):
+                grid[i][10].make_barrier()
+            if(i == 3 or i == 11 or i == 14 or i == 17 or i == 22):
+                grid[i][12].make_barrier()
+            if(i == 14 or i == 22):
+                grid[i][13].make_barrier()
+            if(i == 3 or i == 5 or i == 11 or i == 13 or i == 14 or i == 22 or i == 23):
+                grid[i][14].make_barrier()
+            if(i == 13 or i == 14 or i == 21):
+                grid[i][16].make_barrier()
+            if(i != 1 and i != 3 and i != 9 and i != 17 and i != 23):
+                grid[i][20].make_barrier()
+            if(i == 3 or i == 9 or i == 14 or i == 22 or i == 23):
+                grid[i][22].make_barrier()
+
+            if(i != 1 and i != 7 and i != 13 and i != 13 and i != 21 and i != 23):
+                grid[2][i].make_barrier()
+            if(i != 5 and i != 7 and i != 9 and i != 11 and i != 19 and i != 21):
+                grid[4][i].make_barrier()
+            if(i != 1 and i != 5 and i != 19 and i != 23):
+                grid[6][i].make_barrier()
+            if(i != 1 and i != 19 and i != 23):
+                grid[8][i].make_barrier()
+            if(i != 1 and i != 7 and i != 9 and i != 11 and i != 19 and i != 21):
+                grid[10][i].make_barrier()
+            if(i != 7 and i != 11 and i != 13 and i != 17 and i != 23):
+                grid[12][i].make_barrier()
+            if(i != 1 and i != 3 and i != 7 and i != 11 and i != 13):
+                grid[16][i].make_barrier()
+            if(i != 9 and i != 11 and i != 19 and i != 23):
+                grid[18][i].make_barrier()
+            if(i != 1 and i != 5 and i != 9 and i != 11 and i != 17 and i != 19):
+                grid[20][i].make_barrier()
+
+    def generate_prebuilt_maze1():
+        Reset()
+        for i in range(0, 25):
+            grid[i][0].make_barrier()
+            grid[0][i].make_barrier()
+            grid[i][24].make_barrier()
+            grid[24][i].make_barrier()
+
         for i in range(1, 8):
             for j in range(2, 25, 2):
                 grid[j][i].make_barrier()
             for k in range(9, 18, 2):
                 grid[i][k].make_barrier()
-            
 
         for i in range(19, 24):
             for j in range(2, 23, 2):
@@ -138,7 +203,7 @@ class Node(myGui):
         for i in range(9, 18):
             grid[9][i].make_barrier()
             grid[15][i].make_barrier()
-        
+
         for i in range(11, 16):
             grid[11][i].make_barrier()
             grid[13][i].make_barrier()
@@ -214,7 +279,7 @@ def reconstruct_path(node, tickTime):
 
         parent.make_path()
         myGui.root.update_idletasks()
-        t = threading.Thread(target = time.sleep(tickTime))
+        t = threading.Thread(target=time.sleep(tickTime))
         t.start()
         t.join()
 
@@ -253,7 +318,7 @@ def breadth_first(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        t = threading.Thread(target = time.sleep(tickTime))
+        t = threading.Thread(target=time.sleep(tickTime))
         t.start()
         t.join()
 
@@ -300,7 +365,7 @@ def depth_first(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        t = threading.Thread(target = time.sleep(tickTime))
+        t = threading.Thread(target=time.sleep(tickTime))
         t.start()
         t.join()
 
@@ -357,7 +422,7 @@ def djkstra(grid, tickTime):
                     neighbor.make_open()
 
         myGui.root.update_idletasks()
-        t = threading.Thread(target = time.sleep(tickTime))
+        t = threading.Thread(target=time.sleep(tickTime))
         t.start()
         t.join()
 
@@ -435,7 +500,7 @@ def a_star(grid, tickTime):
 
         # draw updated grid with new open_set
         myGui.root.update_idletasks()
-        t = threading.Thread(target = time.sleep(tickTime))
+        t = threading.Thread(target=time.sleep(tickTime))
         t.start()
         t.join()
 
@@ -446,9 +511,11 @@ def a_star(grid, tickTime):
     messagebox.showinfo("No Solution", "There was no solution")
 
     return False
-    
+
+
 def thread_startalgo():
-    threading.Thread(target = StartAlgorithm).start()
+    threading.Thread(target=StartAlgorithm).start()
+
 
 def StartAlgorithm():
     global grid
@@ -474,10 +541,10 @@ def StartAlgorithm():
 
     # disable UI frame for running algortihm
 
-    for child in myGui.radio.winfo_children(): #disabling radio buttons
+    for child in myGui.radio.winfo_children():  # disabling radio buttons
         child.configure(state="disable")
 
-    for child in myGui.button.winfo_children(): #disabling buttons
+    for child in myGui.button.winfo_children():  # disabling buttons
         child.configure(state="disable")
 
     # choose algorithm here...............
@@ -490,7 +557,8 @@ def StartAlgorithm():
     elif myGui.selectedalg.get() == 'a_star':
         threading.Thread(target=a_star(grid, tickTime)).start()
     else:
-        messagebox.showinfo("Pick Algorithm", "Choose an algorithm before generating Path")
+        messagebox.showinfo(
+            "Pick Algorithm", "Choose an algorithm before generating Path")
 
     # algortihm goes above................
 
@@ -508,5 +576,3 @@ def StartAlgorithm():
 
 def init_grid():
     grid = make_grid(WIDTH, ROWS)
-
-

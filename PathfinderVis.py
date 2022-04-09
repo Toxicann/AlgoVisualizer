@@ -39,7 +39,7 @@ def init_pathfinder():
                  selectedalg)  # sending vars to Pathfinder Logic
     init_grid()
 
-    Radiobutton(rbutton_frame, text="Breadth First Algorithm", variable= selectedalg, value='breadth_first', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
+    Radiobutton(rbutton_frame, text="Breadth First Algorithm", variable=selectedalg, value='breadth_first', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
                 bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=0, padx=5, pady=5, sticky="W")
     Radiobutton(rbutton_frame, text="Depth First Algorithm", variable=selectedalg, value='depth_first', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
                 bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=0, padx=5, pady=5, sticky="W")
@@ -47,14 +47,15 @@ def init_pathfinder():
                 bg="#19232d", fg="white", font=("Arial", 15)).grid(row=0, column=1, padx=5, pady=5, sticky="W")
     Radiobutton(rbutton_frame, text="A Star Algorithm", variable=selectedalg, value='a_star', justify="left", selectcolor="#19232d", activebackground="#19232d", activeforeground="white",
                 bg="#19232d", fg="white", font=("Arial", 15)).grid(row=1, column=1, padx=5, pady=5, sticky="W")
-                
 
     Button(button_frame, text="Start", bg="#32414b", fg="white",
            font=("Arial", 20), command=thread_startalgo).pack(side=LEFT, padx=10, pady=5)
     Button(button_frame, text="Reset", bg="#32414b", fg="white",
            font=("Arial", 20), command=Reset).pack(side=RIGHT, padx=10, pady=5)
-    Button(button_frame, text="Generate", bg="#32414b", fg="white",
-           font=("Arial", 20), command = Node.generate_prebuilt_maze).pack(side="bottom", padx=10, pady=5)
+    Button(button_frame, text="Maze 1", bg="#32414b", fg="white",
+           font=("Arial", 16), command=Node.generate_prebuilt_maze).pack(side="top", padx=10, pady=5)
+    Button(button_frame, text="Maze 2", bg="#32414b", fg="white",
+           font=("Arial", 16), command=Node.generate_prebuilt_maze1).pack(side="bottom", padx=10, pady=5)
 
     root.mainloop()
 
