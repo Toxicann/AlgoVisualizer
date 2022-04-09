@@ -22,6 +22,8 @@ def sortingWindow():
     ]
 
     slider_layout = [
+        [sg.Text("Enter preferred array:")],
+        [sg.Input(key='-ARR-', size=(48, 20), enable_events=True)],
         [sg.Text('No. of Bars:')],
         [sg.Slider(orientation='h', range=(2, 100), default_value=15,
                    size=(38, 17), key='-SLIDER-', enable_events=True)],
@@ -31,6 +33,23 @@ def sortingWindow():
     ]
 
     leftCol = [
+        [sg.Text('Sorting Algorithm', justification='left', font=('Arial', 32))],
+        [sg.Text('Instructions', justification='left', font=(
+            'Arial', 22), key='-SORTNAME-')],
+        [sg.Text('Choose the algorithms you want, its size and speed on the right side of the window. Generate a random array or input your own array for sorting visualization.', size=(32, 10), justification='left', font=(
+            'Arial', 14), key='-SORTDESC-')],
+        [sg.Text('UI Representation', justification='left', font=(
+            'Arial', 18), key='-TIMECOMPLEX-')],
+        [sg.Text('Accesses refers to the times array has been accessed', size=(30, 2), justification='left', font=(
+            'Arial', 14), key='-BESTCASE-')],
+        [sg.Text('Green color represents accesses', size=(30, 2), justification='left', font=(
+            'Arial', 14), key='-AVERAGECASE-')],
+        [sg.Text('Red color represents changes', size=(30, 2), justification='left', font=(
+            'Arial', 14), key='-WORSTCASE-')],
+
+    ]
+
+    midCol = [
         [sg.Canvas(background_color='white', size=(720, 715), key='-CANVAS-')]
     ]
 
@@ -50,14 +69,16 @@ def sortingWindow():
 
     layout = [
         [
-            sg.Column(leftCol),
+            sg.Column(leftCol, justification='left'),
+            sg.VSeparator(),
+            sg.Column(midCol),
             sg.VSeparator(),
             sg.Column(rightCol, vertical_alignment='center',
                       element_justification='center')
         ]
     ]
 
-    window = sg.Window('Sorting Visualizer', layout, size=(1200, 750))
+    window = sg.Window('Sorting Visualizer', layout, size=(1540, 750))
 
     figure_agg = None
     while True:
@@ -68,17 +89,45 @@ def sortingWindow():
 
         if eventSort == '-INS-':
             sortVal = 1
+            window['-SORTNAME-'].update("Insertion Sort")
+            window['-SORTDESC-'].update("Insertion sort works similar to the sorting of playing cards in hands. It is assumed that the first card is already sorted in the card game, and then we select an unsorted card. If the selected unsorted card is greater than the first card, it will be placed at the right side; otherwise, it will be placed at the left side. Similarly, all unsorted cards are taken and put in their exact place.")
+            window['-TIMECOMPLEX-'].update("Time Complexity:")
+            window['-BESTCASE-'].update("Best Case: O(n)")
+            window['-AVERAGECASE-'].update("Average Case: O(n^2)")
+            window['-WORSTCASE-'].update("Worst Case: O(n^2)")
         elif eventSort == '-BBL-':
             sortVal = 2
+            window['-SORTNAME-'].update("Bubble Sort")
+            window['-SORTDESC-'].update(
+                "Bubble sort is a sorting algorithm that compares two adjacent elements and swaps them until they are not in the intended order.")
+            window['-TIMECOMPLEX-'].update("Time Complexity:")
+            window['-BESTCASE-'].update("Best Case: O(n)")
+            window['-AVERAGECASE-'].update("Average Case: O(n^2)")
+            window['-WORSTCASE-'].update("Worst Case: O(n^2)")
         elif eventSort == '-SEL-':
             sortVal = 3
+            window['-SORTNAME-'].update("Selection Sort")
+            window['-SORTDESC-'].update(
+                "Selection sort is a sorting algorithm that selects the smallest element from an unsorted list in each iteration and places that element at the beginning of the unsorted list.")
+            window['-TIMECOMPLEX-'].update("Time Complexity:")
+            window['-BESTCASE-'].update("Best Case: O(n^2)")
+            window['-AVERAGECASE-'].update("Average Case: O(n^2)")
+            window['-WORSTCASE-'].update("Worst Case: O(n^2)")
         elif eventSort == '-QCK-':
             sortVal = 4
+            window['-SORTNAME-'].update("Quick Sort")
+            window['-SORTDESC-'].update(
+                "QuickSort is a Divide and Conquer algorithm. It picks an element as pivot and partitions the given array around the picked pivot.")
+            window['-TIMECOMPLEX-'].update("Time Complexity:")
+            window['-BESTCASE-'].update("Best Case: O(nLogn)")
+            window['-AVERAGECASE-'].update("Average Case: O(nLogn)")
+            window['-WORSTCASE-'].update("Worst Case: O(n^2)")
 
         if eventSort == '-GEN-':
             delete_figure_agg(figure_agg)
             window['-CANVAS-'].update()
-            myVals.getVal(valueSort['-SLIDER-'], sortVal, valueSort['-SPEED-'])
+            myVals.getVal(valueSort['-SLIDER-'], sortVal,
+                          valueSort['-SPEED-'], valueSort['-ARR-'])
             fig, ani = run()
             figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)
 

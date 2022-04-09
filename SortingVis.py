@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-from matplotlib.ticker import NullFormatter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import PySimpleGUI as sg
 import matplotlib
@@ -51,13 +50,15 @@ class myVals:
     N = 15
     sortVal = 4
     speedVal = 3
+    userArr = []
 
     @classmethod
-    def getVal(cls, value1, value2, value3):
+    def getVal(cls, value1, value2, value3, value4):
         cls.N = value1
         cls.sortVal = value2
         cls.speedVal = value3
-        # print(cls.N, cls.sortVal)
+        cls.userArr = value4
+        # print(cls.N, cls.sortVal, cls.userArr)
 
 
 def run():
@@ -71,9 +72,15 @@ def run():
         FPS = 5
     else:
         FPS = 1000/60.0
-    arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
-    np.random.shuffle(arr)
-    # print(myVals.N)
+
+    a = myVals.userArr.split()
+    a = list(map(int, a))
+    if not a:
+        arr = np.round(np.linspace(0, 1000, int(myVals.N)), 0)
+        np.random.shuffle(arr)
+    else:
+        arr = a
+
     arr = TrackedArray(arr)
 
     ##################################
@@ -109,14 +116,14 @@ def run():
 
     # print(f"-------{sorter} sort-----------")
     # print(f"Array sorted in {dt*1E3:.1f} ms")
-    
 
     fig, ax = plt.subplots(figsize=(7.5, 15))
     container = ax.bar(np.arange(0, len(arr), 1),
                        arr.full_copies[0], align="edge", width=0.8)
-    ax.set_xlim([0, myVals.N])
+    ax.set_xlim([0, len(arr)])
     ax.set(xlabel="Index", ylabel="Value", title=f"{sorter} sort")
     txt = ax.text(0, 1000, "")
+    # ax.bar_label(container, fmt='%.2f', padding=2)
 
     def update(frame):
         txt.set_text(f"Accesses = {frame} \nSort Time = {dt*1E3:.1f}ms")
@@ -126,14 +133,14 @@ def run():
 
         idx, op = arr.GetActivity(frame)
         if op == "get":
-            container.patches[idx].set_color("magenta")
+            container.patches[idx].set_color("green")
         elif op == "set":
             container.patches[idx].set_color("red")
 
         return(*container, txt)
 
     ani = FuncAnimation(fig, update, frames=range(
-        len(arr.full_copies)), blit=True, interval=FPS, repeat=False)
+        len(arr.full_copies)), blit=False, interval=FPS, repeat=False)
     return fig, ani
 
 
