@@ -53,13 +53,13 @@ class Node(myGui):
         self.total_rows = total_rows
 
     def make_start(self):
-        self.button.config(bg="DarkOrange2")
+        self.button.config(bg="forest green")
         self.start = True
         self.clicked = True
         Node.start_point = (self.col, self.row)
 
     def make_end(self):
-        self.button.config(bg="lime green")
+        self.button.config(bg="DarkOrange2")
         self.end = True
         self.clicked = True
         Node.end_point = (self.col, self.row)
@@ -85,7 +85,7 @@ class Node(myGui):
         self.button.config(bg="purple")
 
     def make_open(self):
-        self.button.config(bg='cornflower blue')
+        self.button.config(bg='yellow green')
 
     def make_closed(self):
         self.button.config(bg='LightSkyBlue2')
