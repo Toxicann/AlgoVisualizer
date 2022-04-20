@@ -9,6 +9,8 @@ import PySimpleGUI as sg
 import matplotlib
 matplotlib.use('TkAgg')
 
+bar_label = []
+
 
 class TrackedArray():
 
@@ -117,8 +119,8 @@ def run():
         dt = time.perf_counter() - t0
     #####################################
 
-    # print(f"-------{sorter} sort-----------")
-    # print(f"Array sorted in {dt*1E3:.1f} ms")
+    print(f"-------{sorter} sort-----------")
+    print(f"Array sorted in {dt*1E3:.1f} ms")
 
     fig, ax = plt.subplots(figsize=(7.5, 15))
     container = ax.bar(np.arange(0, len(arr), 1),
@@ -127,12 +129,24 @@ def run():
     ax.set(xlabel="Index", ylabel="Value", title=f"{sorter} sort")
     txt = ax.text(0, 1000, "")
 
+    # for bar in container:
+    #     height = bar.get_height()
+    #     label_x_pos = bar.get_x() + bar.get_width() / 2
+    #     bar_label = ax.text(label_x_pos, height, s=f'{height}', ha='center',
+    #                         va='bottom')
+
     def update(frame):
         # ax.bar_label(container, fmt='%.2f', padding=2)
         txt.set_text(f"Accesses = {frame} \nSort Time = {dt*1E3:.1f}ms")
         for (rectangle, height) in zip(container.patches, arr.full_copies[frame]):
             rectangle.set_height(height)
             rectangle.set_color("#1f77b4")
+            # rectangle.set_url(height)
+            # for bar in container:
+            #     height = bar.get_height()
+            #     label_x_pos = bar.get_x() + bar.get_width() / 2
+            #     bar_label.set_text(label_x_pos, height, s='10', ha='center',
+            #                        va='bottom')
 
         idx, op = arr.GetActivity(frame)
         if op == "get":

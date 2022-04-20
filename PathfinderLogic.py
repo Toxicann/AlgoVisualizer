@@ -242,7 +242,6 @@ def make_grid(width, rows):
         for j in range(rows):
             node = Node(i, j, gap, offset, rows)
             grid[i].append(node)
-    print(grid)
     return grid
 
 
@@ -430,6 +429,8 @@ def djkstra(grid, tickTime):
         if current != start:
             current.make_closed()
 
+    return FALSE
+
 
 def a_star(grid, tickTime):
 
@@ -550,13 +551,25 @@ def StartAlgorithm():
 
     # choose algorithm here...............
     if myGui.selectedalg.get() == 'breadth_first':
+        t0 = time.perf_counter()
         threading.Thread(target=breadth_first(grid, tickTime)).start()
+        dt = time.perf_counter() - t0
+        print(f"execution time(BFS): {dt*1E3:.1f} ms")
     elif myGui.selectedalg.get() == 'depth_first':
+        t0 = time.perf_counter()
         threading.Thread(target=depth_first(grid, tickTime)).start()
+        dt = time.perf_counter() - t0
+        print(f"execution time(DFS): {dt*1E3:.1f} ms")
     elif myGui.selectedalg.get() == 'djkstra':
+        t0 = time.perf_counter()
         threading.Thread(target=djkstra(grid, tickTime)).start()
+        dt = time.perf_counter() - t0
+        print(f"execution time(Djkstra): {dt*1E3:.1f} ms")
     elif myGui.selectedalg.get() == 'a_star':
+        t0 = time.perf_counter()
         threading.Thread(target=a_star(grid, tickTime)).start()
+        dt = time.perf_counter() - t0
+        print(f"execution tim:(Astar): {dt*1E3:.1f} ms")
     else:
         messagebox.showinfo(
             "Pick Algorithm", "Choose an algorithm before generating Path")

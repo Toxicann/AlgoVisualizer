@@ -1,4 +1,3 @@
-from matplotlib.widgets import Widget
 from SortingVis import myVals
 import pytest
 import numpy as np
@@ -49,8 +48,7 @@ def test_run2():
 
 
 def test_run3():
-    assert random_arr(10, 2, 3, "2") == [
-        222, 889, 444, 1000, 111, 667, 778, 333, 0, 556]
+    assert random_arr(10, 2, 3, "2") == [222, 889, 444, 1000, 111, 667, 778, 333, 0, 556]
 
 
 def test_run4():
